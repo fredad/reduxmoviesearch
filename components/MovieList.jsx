@@ -21,7 +21,7 @@ class MovieList extends Component {
 				})
 			} else {
 				return (
-					<p>Movie does not exist</p>
+					<p>:)</p>
 				)
 			}
 		}
