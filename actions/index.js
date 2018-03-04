@@ -7,34 +7,34 @@ export const LOAD_FAILURE = 'movieList/LOAD_FAILURE';
 import fetch from 'isomorphic-fetch';
 import thunk from 'redux-thunk';
 
-// action creators go here
 
-export function loadMovies(searchParam, dispatch){
-	// fetch happens inside load request action creator!
-  return function(dispatch){
+export const loadMovies = (searchParam, dispatch) => {
+  // fetch happens inside load request action creator!
+  console.log(searchParam);
   // indicate we are loading movies now
-    //dispatch(requestMovies());
+  dispatch(requestMovies());
 
-    fetch(`http://www.omdbapi.com/?i=tt3896198&apikey=88aa8b1e&s=${searchParam}`)
-    .then((response) => response.json())
-    .then((responseJson) => {
-      console.log(responseJson)
-      // "we successfully got back a response" scenario
-      // requirement: generate a view with the movie results upon successfully getting a response
-      // --> do things here that will eventually update the view
 
-      // dispatch EMITS AN ACTION
-      // (an action <--> view only)
-      // --> dispatch change the view to the success view
+  fetch(`http://www.omdbapi.com/?i=tt3896198&apikey=9b71c011&s=${searchParam}`)
+  .then((response) => response.json())
+  .then((responseJson) => {
 
-        dispatch({
-          type: LOAD_SUCCESS,
-          movies: responseJson.Search
-        })
-    })
-  }
-  // ...what about failure?...
+    console.log(responseJson);
+
+    if(responseJson.Response != 'False'){
+      dispatch(someActionCreator(responseJson))
+    }
+    else{
+      dispatch(handleFailure(responseJson))
+    }
+  })
+
+  .catch((err) => {
+      dispatch(handleFailure(err))
+    }
+  )
 };
+
 
 export const requestMovies = () => {
   return{
@@ -42,12 +42,12 @@ export const requestMovies = () => {
   } 
 };
 
-// export const someActionCreator = (jsonData) => {
-//   return {
-//     type: LOAD_SUCCESS,
-//     // anything else you want!!
-//     // include movies coming from the data
-//     data: jsonData.Search
-//     // TODO: handle edge cases: null response, no search results
-//   }
-// };
+export const someActionCreator = (jsonData) => {
+  return {
+    type: LOAD_SUCCESS,
+    // anything else you want!!
+    // include movies coming from the data
+    movies: jsonData.Search
+    // TODO: handle edge cases: null response, no search results
+  }
+};
