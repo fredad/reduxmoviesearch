@@ -35,6 +35,13 @@ export const loadMovies = (searchParam, dispatch) => {
   )
 };
 
+export const handleFailure = (err) => {
+  return {
+    type: LOAD_FAILURE,
+    errorMessage: err.Error
+  };
+};
+
 
 export const requestMovies = () => {
   return{
